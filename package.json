@@ -1,22 +1,24 @@
 {
   "name": "kuhaku-bot",
   "devDependencies": {
+    "nodemon": "^3.1.4",
     "typescript": "^5.5.4"
   },
   "dependencies": {
-    "module-alias": "^2.2.3",
     "@discord-player/extractor": "^4.5.0",
     "discord-player": "^6.7.1",
     "discord-player-youtubei": "^1.2.4",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
     "ioredis": "^5.4.1",
-    "mediaplex": "^0.0.9"
+    "mediaplex": "^0.0.9",
+    "module-alias": "^2.2.3"
   },
   "_moduleAliases": {
     "@": "./"
   },
   "scripts": {
-    "dev": "bun --watch index.ts"
+    "dev": "nodemon index.ts",
+    "build": "tsc"
   }
 }
