@@ -1,16 +1,17 @@
 import { Message } from "discord.js";
-import config from "../config/config";
-import type CommandType from "../types/command";
-import playMusicHandler from "./play_music_handler";
+import config from "@/config/config";
+import type CommandType from "@/types/command";
+import playMusicHandler from "@/handlers/play_music_handler";
 
 export default function messageHandler(msg: Message) {
     if (config.BOT_ID === msg.author.id) return;
 
-    const cmdMessage: string = msg.content.split(" ").pop() ?? ""
+    const cmdMessage: string = msg.content.split(" ").shift() || ""
     
     for(let cmd of getCommandList()) {
         if (isValidCommand(cmdMessage, cmd.name, cmd.shortName)) {
-            cmd.handler(msg)
+            const cmdArg = msg.content.replace(`${config.BOT_PREFIX}${cmd.name}`, '').replace(`${config.BOT_PREFIX}${cmd.shortName}`, '').trim()
+            cmd.handler(msg, cmdArg)
         }
     }
 }
