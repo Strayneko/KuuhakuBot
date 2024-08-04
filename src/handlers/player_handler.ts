@@ -10,7 +10,14 @@ export default async function initPlayer(client: Client): Promise<Player> {
     const player = new Player(client, {
         skipFFmpeg: false,
         queryCache: new RedisQueryCache(redis),
-    })
+        ytdlOptions: {
+            requestOptions: {
+                headers: {
+                    cookie: config.YOUTUBE_COOKIE,
+                },
+            },
+        },
+    });
 
     player.extractors.register(YoutubeiExtractor, {})
     getPlayerHandlers(player)

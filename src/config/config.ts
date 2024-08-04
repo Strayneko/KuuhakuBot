@@ -6,6 +6,7 @@ const config = {
     BOT_PREFIX: process.env.DISCORD_PREFIX || '',
     DISCORD_TOKEN: process.env.DISCORD_TOKEN || '',
     BOT_ID: '',
+    YOUTUBE_COOKIE: process.env.YOUTUBE_COOKIE || '',
     EMBED_COLOR: {
         Success: 0x00fa9a,
         Error: 0xff2a16,
