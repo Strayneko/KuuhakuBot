@@ -1,6 +1,6 @@
 import config from "@/config/config";
 import getCommandList from "@/utils/get_command_list";
-import { APIEmbedField, EmbedBuilder, Message } from "discord.js";
+import { EmbedBuilder, Message } from "discord.js";
 
 export default function helpHandler(msg: Message, cmdArg: string) {
     const commandList = getCommandList().map((cmd, i) => {
