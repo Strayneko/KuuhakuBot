@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 
-dotenv.config()
+dotenv.config({ path: '.env' }).parsed
 
 const config = {
     BOT_PREFIX: process.env.DISCORD_PREFIX || '',
