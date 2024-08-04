@@ -8,6 +8,12 @@ const EN = {
     },
     VOICE: {
         NOT_CONNECTED: ":sneeze: You have to join the voice channel if you want to hear Shiro sing."
+    },
+    QUEUE: {
+        NO_QUEUE: ":pleading_face: Shiro didn't have anything in request list.",
+        STOP: ":triumph: Okay, Shiro stopped singing and cleared the request list. See you next time :wave:",
+        PAUSED: ":saluting_face: Shiro will stopped singing for a moment.",
+        RESUMED: ":partying_face: Shiro continued singing.",
     }
 }
 
