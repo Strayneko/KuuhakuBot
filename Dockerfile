@@ -23,6 +23,7 @@ COPY . .
 
 # Build the NestJS application
 RUN yarn build
+RUN yarn --no discord-player-youtubei
 
 # Command to run the application
 CMD ["yarn", "prod"]
