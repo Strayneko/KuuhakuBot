@@ -15,10 +15,11 @@
     "module-alias": "^2.2.3"
   },
   "_moduleAliases": {
-    "@": "./"
+    "@": "./dist"
   },
   "scripts": {
-    "dev": "nodemon index.ts",
-    "build": "tsc"
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "prod": "node dist/index.js"
   }
 }
