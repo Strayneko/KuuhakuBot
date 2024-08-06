@@ -7,13 +7,15 @@ import queuePauseHandler from "@/handlers/queue_pause_handler";
 import queueResumeHandler from "@/handlers/queue_resume_handler";
 import trackInfoHandler from "@/handlers/track_info_handler";
 import helpHandler from "@/handlers/help_handler";
+import joinVoiceChannelHandler from "@/handlers/join_voice_channel_handler";
+import leaveVoiceChannelHandler from "@/handlers/leave_voice_channel_handler";
 
 export default function getCommandList(): CommandType[] {
     return [
         {
             name: 'play',
             shortName: 'p',
-            description: 'Play music',
+            description: 'Play music from youtube or youtube playlist',
             handler: playMusicHandler,
         },
         {
@@ -48,15 +50,27 @@ export default function getCommandList(): CommandType[] {
         },
         {
             name: 'info',
-            shortName: 'info',
+            shortName: 'inf',
             description: 'Current song player info',
             handler: trackInfoHandler,
         },
         {
             name: 'help',
-            shortName: 'help',
+            shortName: 'hlp',
             description: 'Show this menu',
             handler: helpHandler,
+        },
+        {
+            name: 'join',
+            shortName: 'jn',
+            description: 'Invite bot to voice channel',
+            handler: joinVoiceChannelHandler
+        },
+        {
+            name: 'leave',
+            shortName: 'lv',
+            description: 'Kick bot from voice channel',
+            handler: leaveVoiceChannelHandler
         },
     ];
 }
