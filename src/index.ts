@@ -1,5 +1,5 @@
 import 'module-alias/register';
-import {Client, EmbedBuilder, Events, IntentsBitField} from 'discord.js';
+import {ActivityType, Client, EmbedBuilder, Events, IntentsBitField} from 'discord.js';
 import config, { setBotId } from '@/config/config';
 import messageHandler from '@/handlers/message_handler';
 import initPlayer from '@/handlers/player_handler';
@@ -22,6 +22,10 @@ const client = new Client({
     client.once(Events.ClientReady, (c) => {
        setBotId(c.user.id)
        console.log(`Bot is now running. Press CTRL-C to exit. Logged in as ${c.user.tag}`);
+       client.user?.setActivity({
+        name: "Waiting No game no life season 2",
+        type: ActivityType.Custom,
+       });
     });
 
     client.on(Events.MessageCreate, messageHandler)
