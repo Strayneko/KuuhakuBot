@@ -1,9 +1,11 @@
 import { Player } from "discord-player";
-import { EmbedBuilder, type Client } from "discord.js";
+import { ActivityType, EmbedBuilder, type Client } from "discord.js";
 import { YoutubeiExtractor } from "discord-player-youtubei"
 import { RedisQueryCache } from "@/class/QueryCache";
 import { Redis } from "ioredis";
 import config from "@/config/config";
+import lang from "@/config/lang";
+import chalk from "chalk";
 
 export default async function initPlayer(client: Client): Promise<Player> {
     const redis = await initRedis()
@@ -20,7 +22,7 @@ export default async function initPlayer(client: Client): Promise<Player> {
     });
 
     player.extractors.register(YoutubeiExtractor, {})
-    getPlayerHandlers(player)
+    getPlayerHandlers(player, client)
     return player;
 }
 
@@ -39,8 +41,8 @@ async function initRedis(): Promise<Redis> {
   return redis;
 }
 
-function getPlayerHandlers(player: Player) {
-    player.on('debug', console.log);
+function getPlayerHandlers(player: Player, client: Client) {
+    player.on('debug', (msg) => console.debug(chalk.blue(msg)));
     
     player.events.on('playerStart', (queue, track) => {
         const embed = new EmbedBuilder({
@@ -54,17 +56,37 @@ function getPlayerHandlers(player: Player) {
                 },
             ],
         });
+        client.user?.setActivity({
+            name: track.title,
+            type: ActivityType.Playing,
+        });
 
         setTimeout(() => {
             queue.metadata?.channel?.send({embeds: [embed]});
         }, 500)
-    })
+    });
     
     player.events.on('playerError', (queue, error, track) => {
         console.error(error)
-    })
+    });
 
     player.events.on('error', (error) => {
         console.error(error)
-    })
+    });
+
+    player.events.on('playerFinish', (queue, track) => {
+        client.user?.setActivity({
+            name: "Waiting No game no life season 2",
+            type: ActivityType.Custom,
+        });
+    });
+
+    player.events.on('queueDelete', (queue) => {
+        queue.metadata?.channel?.send(lang.EN.QUEUE.EMPTY);
+    });
+
+    player.on('error', console.error);
+    player.events.on('debug', (queue, msg) => {
+        console.debug(chalk.yellow(msg));
+    });
 }
