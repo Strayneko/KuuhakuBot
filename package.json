@@ -5,6 +5,7 @@
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "chalk": "^4.1.2",
     "@discord-player/extractor": "^4.5.0",
     "discord-player": "^6.7.1",
     "discord-player-youtubei": "^1.2.4",
@@ -15,7 +16,7 @@
     "module-alias": "^2.2.3"
   },
   "_moduleAliases": {
-    "@": "./dist"
+    "@": "./src"
   },
   "scripts": {
     "dev": "nodemon src/index.ts",
