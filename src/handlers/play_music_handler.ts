@@ -1,6 +1,5 @@
 import {
   EmbedBuilder,
-  Guild,
   User,
   type Message
 } from "discord.js";
@@ -8,7 +7,6 @@ import lang from "@/config/lang";
 import {
   GuildQueue,
   PlayerNodeInitializerOptions,
-  QueryType,
   QueueRepeatMode,
   SearchResult,
   Track,
@@ -24,8 +22,7 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
   }
 
   const player = useMainPlayer();
-  const results = await player?.search(cmdArg, {
-    searchEngine: QueryType.YOUTUBE,
+  const results = await player.search(cmdArg, {
     requestedBy: msg.member,
   });
 
@@ -34,14 +31,32 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
     return;
   }
 
-  const options = getPlayerOptions(msg)
+  const options = getPlayerOptions(msg);
+  let playlist: string = '';
   const { track, searchResult, queue } = await player.play(
     msg.member.voice.channel,
     results,
     options,
   );
+
   const embed = getAddedTrackEmbed(track, searchResult, msg.author, queue)
-  msg.channel.send({embeds: [embed]})
+  const embeds = [embed];
+
+  // add playlist info if search result has playlist
+  if (searchResult.hasPlaylist()) {
+    playlist = searchResult.playlist!.tracks
+    .map((song, i) => {
+      return `**${i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url}) -- <@${song.requestedBy?.id}>`;
+    })
+    .join("\n");
+
+    embeds.push(new EmbedBuilder({
+        color: config.EMBED_COLOR.Primary,
+        description: playlist,
+        title: 'Playlist',
+      }));
+  }
+  msg.channel.send({embeds});
 }
 
 function getAddedTrackEmbed(track: Track, searchResult: SearchResult, author: User, queue: GuildQueue): EmbedBuilder {
@@ -50,7 +65,7 @@ function getAddedTrackEmbed(track: Track, searchResult: SearchResult, author: Us
   const currentTrackTimestamp = queue.node.getTimestamp()?.current.value ?? 0;
   let totalDuration = Number(queue.currentTrack?.durationMS) - Number(currentTrackTimestamp);
 
-  queue.tracks.data.forEach(track => {
+  remainingTracks.map((track) => {
     totalDuration += track.durationMS;
   });
 
@@ -106,17 +121,15 @@ function getPlayerOptions<T>(msg: Message): PlayerNodeInitializerOptions<T> {
       repeatMode: QueueRepeatMode[0] as unknown as QueueRepeatMode,
       noEmitInsert: true,
       leaveOnStop: false,
-      leaveOnEmpty: true,
-      leaveOnEmptyCooldown: 60000,
+      leaveOnEmpty: false,
       leaveOnEnd: false,
-      leaveOnEndCooldown: 600000,
       pauseOnEmpty: false,
       preferBridgedMetadata: true,
       disableBiquad: true
     },
     requestedBy: msg.author,
     connectionOptions: {
-      deaf: true
+      deaf: true,
     }
   }
 }
