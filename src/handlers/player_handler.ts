@@ -6,6 +6,7 @@ import { Redis } from "ioredis";
 import config from "@/config/config";
 import lang from "@/config/lang";
 import chalk from "chalk";
+import { AppleMusicExtractor, SoundCloudExtractor, SpotifyExtractor, YoutubeExtractor } from "@discord-player/extractor";
 
 export default async function initPlayer(client: Client): Promise<Player> {
     const redis = await initRedis()
@@ -21,8 +22,14 @@ export default async function initPlayer(client: Client): Promise<Player> {
         },
     });
 
-    player.extractors.register(YoutubeiExtractor, {})
     getPlayerHandlers(player, client)
+    console.log(config.YOUTUBE_COOKIE)
+    player.extractors.register(YoutubeiExtractor, {
+        authentication: config.YOUTUBE_COOKIE,
+    });
+    player.extractors.register(SpotifyExtractor, {});
+    player.extractors.register(AppleMusicExtractor, {});
+    player.extractors.register(SoundCloudExtractor, {});
     return player;
 }
 
@@ -73,6 +80,8 @@ function getPlayerHandlers(player: Player, client: Client) {
     player.events.on('error', (error) => {
         console.error(error)
     });
+
+    player.on('error', (error) => {console.error(chalk.red(error))});
 
     player.events.on('playerFinish', (queue, track) => {
         client.user?.setActivity({
