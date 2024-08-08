@@ -18,7 +18,7 @@ const EN = {
         PAUSED: ":saluting_face: Shiro will stopped singing for a moment.",
         RESUMED: ":partying_face: Shiro continued singing.",
         EMPTY: ":triumph: Shiro stopped singing because Shiro request list was empty.",
-        BUFFERING: ":two_oclock: Shiro was buffered, unable to sing any songs at the moment.",
+        BUFFERING: ":two_oclock: Shiro is loading your request.",
     }
 }
 
