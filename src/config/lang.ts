@@ -1,7 +1,8 @@
 const EN = {
     YT_SEARCH: {
         FAILED: ":sob: Shiro can't access youtube right now.",
-        NO_RESULT: ":sob: Shiro can't find your request on youtube."
+        NO_RESULT: ":sob: Shiro can't find your request on youtube.",
+        SEARCHING: ":mag_right: Shiro is looking for your request."
     },
     YTDL: {
         NO_AUDIO_FORMATS: ":sob: No audio format for this youtube video, Shiro can't sing at the moment."
@@ -16,7 +17,8 @@ const EN = {
         STOP: ":triumph: Okay, Shiro stopped singing and cleared the request list. See you next time :wave:",
         PAUSED: ":saluting_face: Shiro will stopped singing for a moment.",
         RESUMED: ":partying_face: Shiro continued singing.",
-        EMPTY: ":triumph: Shiro stopped singing because Shiro request list was empty."
+        EMPTY: ":triumph: Shiro stopped singing because Shiro request list was empty.",
+        BUFFERING: ":two_oclock: Shiro was buffered, unable to sing any songs at the moment.",
     }
 }
 
