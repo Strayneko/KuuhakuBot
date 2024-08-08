@@ -1,8 +1,6 @@
 import config from "@/config/config";
-import lang from "@/config/lang";
 import useQueue from "@/hooks/use_queue_hook";
-import { useMainPlayer } from "discord-player";
-import { EmbedBuilder, Guild, Message } from "discord.js";
+import { EmbedBuilder, Message } from "discord.js";
 
 export default async function queueListHandler(msg: Message, cmdArg: string) {
   const queue = useQueue(msg);
