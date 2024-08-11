@@ -19,6 +19,9 @@ const EN = {
         RESUMED: ":partying_face: Shiro continued singing.",
         EMPTY: ":triumph: Shiro stopped singing because Shiro request list was empty.",
         BUFFERING: ":two_oclock: Shiro is loading your request.",
+    },
+    PLAYER: {
+        ERROR: ":sob: Unable to extract song info. Therefore, Shiro is unable to sing this song at the moment."
     }
 }
 

@@ -9,6 +9,7 @@ import trackInfoHandler from "@/handlers/track_info_handler";
 import helpHandler from "@/handlers/help_handler";
 import joinVoiceChannelHandler from "@/handlers/join_voice_channel_handler";
 import leaveVoiceChannelHandler from "@/handlers/leave_voice_channel_handler";
+import queueShuffleHandler from "@/handlers/queue_shuffle_handler";
 
 export default function getCommandList(): CommandType[] {
     return [
@@ -72,5 +73,11 @@ export default function getCommandList(): CommandType[] {
             description: 'Kick bot from voice channel',
             handler: leaveVoiceChannelHandler
         },
+        {
+            name: 'shuffle',
+            shortName: 'sfl',
+            description: 'Shuffle playlist',
+            handler: queueShuffleHandler,
+        }
     ];
 }
