@@ -1,4 +1,4 @@
-import { EmbedBuilder, User, type Message } from "discord.js";
+import { EmbedBuilder, Message, User } from "discord.js";
 import lang from "@/config/lang";
 import {
   GuildQueue,
@@ -20,23 +20,36 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
 
   const player = useMainPlayer();
   
-  msg.channel.send(lang.EN.YT_SEARCH.SEARCHING);
-  const results = await player.search(cmdArg, {
-    requestedBy: msg.member
-  });
+
+  const result = await Promise.all([
+    msg.channel.send(lang.EN.YT_SEARCH.SEARCHING), 
+    player.search(cmdArg, {
+      requestedBy: msg.member
+    })
+  ]);
+  
+  const searchMsg = result[0];
+  const results = result[1];
 
   if (results.isEmpty()) {
-    msg.channel.send(lang.EN.YT_SEARCH.NO_RESULT);
+   searchMsg.edit(lang.EN.YT_SEARCH.NO_RESULT);
+    return;
+  }
+
+  const requestBridge = await player.extractors.requestBridge(results.tracks[0]);
+  if (requestBridge === undefined) {
+    searchMsg.edit(lang.EN.PLAYER.ERROR);
     return;
   }
 
   const options = getPlayerOptions(msg);
   let playlist: string = "";
-  const { track, searchResult, queue } = await player.play(
-    msg.member.voice.channel,
-    results,
-    options
-  );
+    const { track, searchResult, queue } = await player.play(
+      msg.member.voice.channel,
+      results,
+      options,
+    );
+
 
   const embed = getAddedTrackEmbed(track, searchResult, msg.author, queue);
   const embeds = [embed];
@@ -65,10 +78,17 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
       })
     );
   }
+  searchMsg.delete();
   msg.channel.send({ embeds });
 
+  let buffMsg: Message|null = null;
+
   if (queue.node.isBuffering()) {
-    msg.channel.send(lang.EN.QUEUE.BUFFERING);
+      buffMsg = await msg.channel.send(lang.EN.QUEUE.BUFFERING);
+  }
+
+  if (queue.node.isPlaying() && buffMsg !== null) {
+    buffMsg.delete();
   }
 }
 
@@ -145,12 +165,12 @@ function getPlayerOptions<T>(msg: Message): PlayerNodeInitializerOptions<T> {
       leaveOnEnd: false,
       pauseOnEmpty: false,
       preferBridgedMetadata: true,
-      disableBiquad: true
+      disableBiquad: true,
     },
     requestedBy: msg.author,
     connectionOptions: {
       deaf: true
-    }
+    },
   };
 }
 
