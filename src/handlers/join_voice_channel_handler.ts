@@ -1,5 +1,5 @@
 import lang from "@/config/lang";
-import { useMainPlayer } from "discord-player";
+import { QueueRepeatMode, useMainPlayer } from "discord-player";
 import { Guild, Message } from "discord.js";
 
 export default async function joinVoiceChannelHandler(msg: Message, cmdArg: string) {
@@ -10,8 +10,18 @@ export default async function joinVoiceChannelHandler(msg: Message, cmdArg: stri
 
     const player = useMainPlayer();
     const queue = player.queues.create(msg.guild as Guild, {
-        leaveOnEmpty: false,
-        leaveOnEnd: false,
+        metadata: {
+            channel: msg.channel as any,
+            guild: msg.guild
+          },
+          repeatMode: QueueRepeatMode[0] as unknown as QueueRepeatMode,
+          noEmitInsert: true,
+          leaveOnStop: false,
+          leaveOnEmpty: false,
+          leaveOnEnd: false,
+          pauseOnEmpty: false,
+          preferBridgedMetadata: true,
+          disableBiquad: true,
     });
 
     if (queue.connection) return;

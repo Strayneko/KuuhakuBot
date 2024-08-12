@@ -7,10 +7,12 @@ import {
   QueueRepeatMode,
   SearchResult,
   Track,
-  useMainPlayer
+  useMainPlayer,
+  useQueue
 } from "discord-player";
 import config from "@/config/config";
 import durationFormatter from "@/utils/duration_formatter";
+import checkSameVoiceChannel from "@/utils/check_same_voice_channel";
 
 export default async function playMusicHandler(msg: Message, cmdArg: string) {
   if (!msg.member?.voice.channel) {
@@ -19,28 +21,23 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
   }
 
   const player = useMainPlayer();
-  
+  const currentQueue = useQueue(msg.member.guild.id);
+  if (currentQueue) {
+    if (!checkSameVoiceChannel(msg, currentQueue)) return;
+  }
 
-  const result = await Promise.all([
+  const [searchMsg, results] = await Promise.all([
     msg.channel.send(lang.EN.YT_SEARCH.SEARCHING), 
     player.search(cmdArg, {
       requestedBy: msg.member
     })
   ]);
-  
-  const searchMsg = result[0];
-  const results = result[1];
 
   if (results.isEmpty()) {
    searchMsg.edit(lang.EN.YT_SEARCH.NO_RESULT);
     return;
   }
 
-  const requestBridge = await player.extractors.requestBridge(results.tracks[0]);
-  if (requestBridge === undefined) {
-    searchMsg.edit(lang.EN.PLAYER.ERROR);
-    return;
-  }
 
   const options = getPlayerOptions(msg);
   let playlist: string = "";
@@ -164,7 +161,6 @@ function getPlayerOptions<T>(msg: Message): PlayerNodeInitializerOptions<T> {
       leaveOnEmpty: false,
       leaveOnEnd: false,
       pauseOnEmpty: false,
-      preferBridgedMetadata: true,
       disableBiquad: true,
     },
     requestedBy: msg.author,

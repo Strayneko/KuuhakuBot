@@ -1,10 +1,14 @@
 import config from "@/config/config";
 import useQueue from "@/hooks/use_queue_hook";
+import checkSameVoiceChannel from "@/utils/check_same_voice_channel";
 import { EmbedBuilder, Message } from "discord.js";
 
 export default async function queueSkipHandler(msg: Message, cmdArg: string) {
     const queue = useQueue(msg);
     if (!queue) return;
+
+    const inSameVoiceChannel = checkSameVoiceChannel(msg, queue);
+    if (!inSameVoiceChannel) return;
 
     const currentSong = queue.currentTrack;
 
