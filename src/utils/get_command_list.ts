@@ -10,13 +10,15 @@ import helpHandler from "@/handlers/help_handler";
 import joinVoiceChannelHandler from "@/handlers/join_voice_channel_handler";
 import leaveVoiceChannelHandler from "@/handlers/leave_voice_channel_handler";
 import queueShuffleHandler from "@/handlers/queue_shuffle_handler";
+import queueLoopHandler from "@/handlers/queue_loop_handler";
+import queueClearHandler from "@/handlers/queue_clear_handler";
 
 export default function getCommandList(): CommandType[] {
     return [
         {
             name: 'play',
             shortName: 'p',
-            description: 'Play music from youtube or youtube playlist',
+            description: 'Play music from youtube or youtube playlist and spotify track or playlist',
             handler: playMusicHandler,
         },
         {
@@ -78,6 +80,18 @@ export default function getCommandList(): CommandType[] {
             shortName: 'sfl',
             description: 'Shuffle playlist',
             handler: queueShuffleHandler,
-        }
+        },
+        {
+            name: 'loop',
+            shortName: 'lp',
+            description: 'Loop playlist, ON to loop the playlist, OFF to turn off loop mode.',
+            handler: queueLoopHandler,
+        },
+        {
+            name: 'clear',
+            shortName: 'cl',
+            description: 'Clear playlist.',
+            handler: queueClearHandler,
+        },
     ];
 }
