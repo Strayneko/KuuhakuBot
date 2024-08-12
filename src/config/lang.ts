@@ -19,6 +19,12 @@ const EN = {
         RESUMED: ":partying_face: Shiro continued singing.",
         EMPTY: ":triumph: Shiro stopped singing because Shiro request list was empty.",
         BUFFERING: ":two_oclock: Shiro is loading your request.",
+        NOT_IN_SAME_CHANNEL: ":triumph: You must join the same voice channel as Shiro.",
+        MISSING_REPEAT_ARG: ":nerd: Please provide arguments for Shiro to loop ON or OFF",
+        SAME_REPEAT_ARG: ":face_with_monocle: Shiro already set the loop mode to ",
+        REPEAT_MODE_ON: ":repeat: Shiro enabled looping on this queue.",
+        REPEAT_MODE_OFF: ":arrow_forward: Shiro disabled looping on this queue.",
+        SHUFFLED: ":shaking_face: Shiro shuffled the queue, check queue list to verify.",
     },
     PLAYER: {
         ERROR: ":sob: Unable to extract song info. Therefore, Shiro is unable to sing this song at the moment."
