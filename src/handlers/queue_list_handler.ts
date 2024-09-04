@@ -21,9 +21,7 @@ export default async function queueListHandler(msg: Message, cmdArg: string) {
     .toArray()
     .slice(page * 10, page * 10 + 10)
     .map((song, i) => {
-      return `**${page * 10 + i + 1}.** \`[${song.duration}]\` ${
-        song.title
-      } -- <@${song.requestedBy?.id}>`;
+      return `**${page * 10 + i + 1}.** \`[${song.duration}]\` [${song?.title}](${song?.url}) -- <@${song.requestedBy?.id}>`;
     })
     .join("\n");
 
@@ -33,7 +31,7 @@ export default async function queueListHandler(msg: Message, cmdArg: string) {
     description:
       `**Currently Playing**\n` +
       (currentSong
-        ? `\`[${currentSong?.duration}]\` [${currentSong?.title}](${currentSong?.url} -- Requested by: <@${currentSong.requestedBy?.id}>`
+        ? `\`[${currentSong?.duration}]\` [${currentSong?.title}](${currentSong?.url}) -- Requested by: <@${currentSong.requestedBy?.id}>`
         : "None") +
       `\n\n**Queue**\n${queueString}`,
     thumbnail: { url: currentSong?.thumbnail as string },
