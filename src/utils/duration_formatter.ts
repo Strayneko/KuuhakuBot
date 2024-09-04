@@ -1,6 +1,6 @@
 export default function durationFormatter(duration: number): string {
     const seconds: number = Math.floor((duration / 1000) % 60);
-    const minutes: number = Math.floor(duration / (1000 * 60));
+    const minutes: number = Math.floor((duration / (1000 * 60)) % 60);
     const hours: number = Math.floor(duration / (1000 * 60 * 60));
 
     const hoursFormat: string = addZero(hours);
