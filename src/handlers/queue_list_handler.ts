@@ -33,7 +33,7 @@ export default async function queueListHandler(msg: Message, cmdArg: string) {
     description:
       `**Currently Playing**\n` +
       (currentSong
-        ? `\`[${currentSong?.duration}]\` ${currentSong?.title} -- Requested by: <@${currentSong.requestedBy?.id}>`
+        ? `\`[${currentSong?.duration}]\` [${currentSong?.title}](${currentSong?.url} -- Requested by: <@${currentSong.requestedBy?.id}>`
         : "None") +
       `\n\n**Queue**\n${queueString}`,
     thumbnail: { url: currentSong?.thumbnail as string },
