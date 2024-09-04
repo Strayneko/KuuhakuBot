@@ -18,11 +18,7 @@ export default async function messageHandler(msg: Message) {
 
 function isValidCommand(command: string, name: string, shortName: string): boolean {
     if (command.length === 0) return false;
-    
-    command = command.replace(config.BOT_PREFIX, '').trim();
-    if (command.length === 0) return false;
-
-    if (![name, shortName].includes(command)) return false;
+    if (![config.BOT_PREFIX + name, config.BOT_PREFIX + shortName].includes(command)) return false;
 
     return true;
 }
