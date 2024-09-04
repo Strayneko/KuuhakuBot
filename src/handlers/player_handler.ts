@@ -6,12 +6,11 @@ import { Redis } from "ioredis";
 import config from "@/config/config";
 import chalk from "chalk";
 import { AppleMusicExtractor, BridgeProvider, BridgeSource, SoundCloudExtractor, SpotifyExtractor, YoutubeExtractor } from "@discord-player/extractor";
-import lang from "@/config/lang";
 
 export default async function initPlayer(client: Client): Promise<Player> {
     const redis = await initRedis()
     const player = new Player(client, {
-        skipFFmpeg: true,
+        skipFFmpeg: false,
         queryCache: new RedisQueryCache(redis),
 
         ytdlOptions: {
@@ -27,9 +26,7 @@ export default async function initPlayer(client: Client): Promise<Player> {
     player.extractors.register(YoutubeiExtractor, {
         authentication: config.YOUTUBE_COOKIE,
     });
-    player.extractors.register(SpotifyExtractor, {
-        bridgeProvider: new BridgeProvider(BridgeSource.SoundCloud),
-    });
+    player.extractors.register(SpotifyExtractor, {});
     player.extractors.register(AppleMusicExtractor, {});
     player.extractors.register(SoundCloudExtractor, {});
     return player;
@@ -53,9 +50,6 @@ async function initRedis(): Promise<Redis> {
 function getPlayerHandlers(player: Player, client: Client) {
     player.on('debug', (msg) => console.debug(chalk.blue(msg)));
     
-    player.on('error', (error) => {
-        console.log('asdasd');
-    })
     player.events.on('playerStart', (queue, track) => {
         const embed = new EmbedBuilder({
             color: config.EMBED_COLOR.Primary,
@@ -94,7 +88,5 @@ function getPlayerHandlers(player: Player, client: Client) {
         });
     });
     player.on('error', console.error);
-    player.events.on('debug', (queue, msg) => {
-        console.debug(chalk.yellow(msg));
-    });
+
 }
