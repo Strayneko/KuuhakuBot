@@ -38,7 +38,6 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
     return;
   }
 
-
   const options = getPlayerOptions(msg);
   let playlist: string = "";
     const { track, searchResult, queue } = await player.play(
@@ -54,7 +53,7 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
   // add playlist info if search result has playlist
   if (searchResult.hasPlaylist()) {
     const totalPages = Math.ceil(searchResult.tracks.length / 10) || 1;
-    const page = 1;
+    const page = 0;
     playlist = searchResult
       .playlist!.tracks.slice(page * 10, page * 10 + 10)
       .map((song, i) => {
@@ -118,28 +117,28 @@ function getAddedTrackEmbed(
       {
         name: "Track",
         value: `[${track.title}](${track.url})`,
-        inline: false
+        inline: false,
       },
       {
         name: "Estimated time until played",
         value: durationFormatter(totalDuration),
-        inline: true
+        inline: true,
       },
       {
         name: "Track Length",
         value: durationFormatter(track.durationMS),
-        inline: true
+        inline: true,
       },
       {
         name: "Position in upcoming",
         value: `${remainingTracks.length}`,
-        inline: true
+        inline: true,
       },
       {
         name: "Position in queue",
         value: `${queue.size}`,
-        inline: true
-      }
+        inline: true,
+      },
     ],
     footer: {
       text: `Requested by ${author.username}`,
