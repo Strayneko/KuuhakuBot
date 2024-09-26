@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@bufbuild/protobuf@^2.0.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@bufbuild/protobuf/-/protobuf-2.1.0.tgz#6925f30c25789b4f74d7c505e731c96f79fb48a7"
+  integrity sha512-+2Mx67Y3skJ4NCD/qNSdBJNWtu6x6Qr53jeNg+QcwiL6mt0wK+3jwHH2x1p7xaYH6Ve2JKOVn0OxU35WsmqI9A==
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -384,13 +389,13 @@ discord-api-types@^0.37.50:
   resolved "https://registry.npmjs.org/discord-api-types/-/discord-api-types-0.37.93.tgz"
   integrity sha512-M5jn0x3bcXk8EI2c6F6V6LeOWq10B/cJf+YJSyqNmg7z4bdXK+Z7g9zGJwHS0h9Bfgs0nun2LQISFOzwck7G9A==
 
-discord-player-youtubei@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/discord-player-youtubei/-/discord-player-youtubei-1.2.6.tgz#7dc296148dd77847a77de751da73b1378359f4ea"
-  integrity sha512-b2L/I9TP7HCv3EO8mbn070SWJV0eBCjG2YIbFmQhQxe8vRMC5Zs4BisI7JmkNvu4xlbVGeL1NMK9VrC5FR+uqw==
+discord-player-youtubei@^1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/discord-player-youtubei/-/discord-player-youtubei-1.3.2.tgz#fcd50721d0fa9c1a20a35b0ade796b09bcc18fd9"
+  integrity sha512-NtKtLiR9HMYfTDXYvBeQCE+k3eegjB+ttaBq7gYdldIghBZ4fYHb0ERsAcY6lN4bQyAq0DaPFRIRbyk9Pi0TSg==
   dependencies:
     tiny-typed-emitter "^2.1.0"
-    youtubei.js "^10.3.0"
+    youtubei.js "^10.5.0"
 
 discord-player@^6.7.1:
   version "6.7.1"
@@ -1147,11 +1152,12 @@ youtube-sr@^4.3.9:
   resolved "https://registry.npmjs.org/youtube-sr/-/youtube-sr-4.3.11.tgz"
   integrity sha512-3oHiS2x7PpMiDRW7Cq8nz1bkAIBOJHoOwkPl/oncM/+A9/3xxMDgMLGW2dsBEP1DHFyRXYTVABgfbdwHF8sXXQ==
 
-youtubei.js@^10.3.0:
-  version "10.3.0"
-  resolved "https://registry.npmjs.org/youtubei.js/-/youtubei.js-10.3.0.tgz"
-  integrity sha512-tLmeJCECK2xF2hZZtF2nEqirdKVNLFSDpa0LhTaXY3tngtL7doQXyy7M2CLueramDTlmCnFaW+rctHirTPFaRQ==
+youtubei.js@^10.5.0:
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/youtubei.js/-/youtubei.js-10.5.0.tgz#3cf0c79cf73fb26e13d167f37dec7d65419e91b8"
+  integrity sha512-iyA+VF28c15tCCKH9ExM2RKC3zYiHzA/eixGlJ3vERANkuI+xYKzAZ4vtOhmyqwrAddu88R/DkzEsmpph5NWjg==
   dependencies:
+    "@bufbuild/protobuf" "^2.0.0"
     jintr "^2.1.1"
     tslib "^2.5.0"
     undici "^5.19.1"
