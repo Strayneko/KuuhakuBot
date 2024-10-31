@@ -26,6 +26,11 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
     if (!checkSameVoiceChannel(msg, currentQueue)) return;
   }
 
+  if (cmdArg.length === 0) {
+    msg.channel.send(lang.EN.YT_SEARCH.NO_ARGUMENT);
+    return;
+}
+
   const [searchMsg, results] = await Promise.all([
     msg.channel.send(lang.EN.YT_SEARCH.SEARCHING), 
     player.search(cmdArg, {

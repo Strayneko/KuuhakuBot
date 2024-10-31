@@ -2,7 +2,8 @@ const EN = {
     YT_SEARCH: {
         FAILED: ":sob: Shiro can't access youtube right now.",
         NO_RESULT: ":sob: Shiro can't find your request on youtube.",
-        SEARCHING: ":mag_right: Shiro is looking for your request."
+        SEARCHING: ":mag_right: Shiro is looking for your request.",
+        NO_ARGUMENT: ":sob: Please provide Shiro the query to search.",
     },
     YTDL: {
         NO_AUDIO_FORMATS: ":sob: No audio format for this youtube video, Shiro can't sing at the moment."
@@ -28,7 +29,7 @@ const EN = {
     },
     PLAYER: {
         ERROR: ":sob: Unable to extract song info. Therefore, Shiro is unable to sing this song at the moment."
-    }
+    },
 }
 
 export default { EN }
