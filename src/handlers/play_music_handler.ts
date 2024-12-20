@@ -1,4 +1,4 @@
-import { EmbedBuilder, Message, User } from "discord.js";
+import { EmbedBuilder, Message, TextChannel, User } from "discord.js";
 import lang from "@/config/lang";
 import {
   GuildQueue,
@@ -16,7 +16,7 @@ import checkSameVoiceChannel from "@/utils/check_same_voice_channel";
 
 export default async function playMusicHandler(msg: Message, cmdArg: string) {
   if (!msg.member?.voice.channel) {
-    msg.channel.send(lang.EN.VOICE.NOT_CONNECTED);
+    ((msg.channel as TextChannel) as TextChannel).send(lang.EN.VOICE.NOT_CONNECTED);
     return;
   }
 
@@ -27,12 +27,12 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
   }
 
   if (cmdArg.length === 0) {
-    msg.channel.send(lang.EN.YT_SEARCH.NO_ARGUMENT);
+    ((msg.channel as TextChannel) as TextChannel).send(lang.EN.YT_SEARCH.NO_ARGUMENT);
     return;
 }
 
   const [searchMsg, results] = await Promise.all([
-    msg.channel.send(lang.EN.YT_SEARCH.SEARCHING), 
+    ((msg.channel as TextChannel) as TextChannel).send(lang.EN.YT_SEARCH.SEARCHING), 
     player.search(cmdArg, {
       requestedBy: msg.member
     })
@@ -80,12 +80,12 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
     );
   }
   searchMsg.delete();
-  msg.channel.send({ embeds });
+  ((msg.channel as TextChannel) as TextChannel).send({ embeds });
 
   let buffMsg: Message|null = null;
 
   if (queue.node.isBuffering()) {
-      buffMsg = await msg.channel.send(lang.EN.QUEUE.BUFFERING);
+      buffMsg = await ((msg.channel as TextChannel) as TextChannel).send(lang.EN.QUEUE.BUFFERING);
   }
 
   if (queue.node.isPlaying() && buffMsg !== null) {
@@ -156,7 +156,7 @@ function getPlayerOptions<T>(msg: Message): PlayerNodeInitializerOptions<T> {
   return {
     nodeOptions: {
       metadata: {
-        channel: msg.channel as any,
+        channel: ((msg.channel as TextChannel) as TextChannel) as any,
         guild: msg.guild
       } as T,
       repeatMode: QueueRepeatMode[0] as unknown as QueueRepeatMode,

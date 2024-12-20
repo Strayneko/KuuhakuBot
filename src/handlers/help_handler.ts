@@ -1,6 +1,7 @@
 import config from "@/config/config";
 import getCommandList from "@/utils/get_command_list";
 import { EmbedBuilder, Message } from "discord.js";
+import { TextChannel } from "discord.js";
 
 export default function helpHandler(msg: Message, cmdArg: string) {
     const commandList = getCommandList().map((cmd, i) => {
@@ -15,5 +16,5 @@ export default function helpHandler(msg: Message, cmdArg: string) {
         description: commandList,
     });
 
-    msg.channel.send({ embeds: [embed] });
+    (msg.channel as TextChannel).send({ embeds: [embed] });
 }

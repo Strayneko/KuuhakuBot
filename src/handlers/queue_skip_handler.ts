@@ -1,7 +1,7 @@
 import config from "@/config/config";
 import useQueue from "@/hooks/use_queue_hook";
 import checkSameVoiceChannel from "@/utils/check_same_voice_channel";
-import { EmbedBuilder, Message } from "discord.js";
+import { EmbedBuilder, Message, TextChannel } from "discord.js";
 
 export default async function queueSkipHandler(msg: Message, cmdArg: string) {
     const queue = useQueue(msg);
@@ -20,5 +20,5 @@ export default async function queueSkipHandler(msg: Message, cmdArg: string) {
             url: currentSong?.thumbnail as string,
         }
     });
-    msg.channel.send({ embeds: [embed] });
+    (msg.channel as TextChannel).send({ embeds: [embed] });
 }

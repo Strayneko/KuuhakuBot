@@ -1,6 +1,6 @@
 import config from "@/config/config";
 import useQueue from "@/hooks/use_queue_hook";
-import { EmbedBuilder, Message } from "discord.js";
+import { EmbedBuilder, Message, TextChannel } from "discord.js";
 
 export default async function queueListHandler(msg: Message, cmdArg: string) {
   const queue = useQueue(msg);
@@ -10,7 +10,7 @@ export default async function queueListHandler(msg: Message, cmdArg: string) {
   const page = (Number(cmdArg) || 1) - 1;
 
   if (page >= totalPages) {
-    msg.channel.send(
+    (msg.channel as TextChannel).send(
       `:pleading_face: There are only a total of ${totalPages} pages of songs that Shiro can sing.`
     );
     return;
@@ -40,5 +40,5 @@ export default async function queueListHandler(msg: Message, cmdArg: string) {
     }
   });
 
-  msg.channel.send({ embeds: [embed] });
+  (msg.channel as TextChannel).send({ embeds: [embed] });
 }

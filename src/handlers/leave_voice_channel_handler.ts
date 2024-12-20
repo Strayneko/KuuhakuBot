@@ -1,7 +1,7 @@
 import lang from "@/config/lang";
 import checkSameVoiceChannel from "@/utils/check_same_voice_channel";
 import { useMainPlayer } from "discord-player";
-import { Guild, Message } from "discord.js";
+import { Guild, Message, TextChannel } from "discord.js";
 
 export default async function leaveVoiceChannelHandler(msg: Message, cmdArg: string) {
     const queue = useMainPlayer().queues.get(msg.guild as Guild);
@@ -14,5 +14,5 @@ export default async function leaveVoiceChannelHandler(msg: Message, cmdArg: str
         queue.delete();
     }
     
-    msg.channel.send(lang.EN.VOICE.LEFT);
+    (msg.channel as TextChannel).send(lang.EN.VOICE.LEFT);
 }

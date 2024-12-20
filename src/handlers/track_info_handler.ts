@@ -1,6 +1,6 @@
 import config from "@/config/config";
 import useQueue from "@/hooks/use_queue_hook";
-import { EmbedBuilder, Message } from "discord.js";
+import { EmbedBuilder, Message, TextChannel } from "discord.js";
 
 export default function trackInfoHandler(msg: Message, cmdArg: string) {
     const queue = useQueue(msg);
@@ -19,5 +19,5 @@ export default function trackInfoHandler(msg: Message, cmdArg: string) {
         },
         description: `Currently Playing [${currentSong?.title}](${currentSong?.url})\n\n ${bar}`,
 });
-    msg.channel.send({ embeds: [embed] });
+    (msg.channel as TextChannel).send({ embeds: [embed] });
 }
