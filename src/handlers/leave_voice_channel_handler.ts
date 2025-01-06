@@ -1,5 +1,6 @@
 import lang from "@/config/lang";
 import checkSameVoiceChannel from "@/utils/check_same_voice_channel";
+import resetActivity from "@/utils/reset_activity";
 import { useMainPlayer } from "discord-player";
 import { Guild, Message, TextChannel } from "discord.js";
 
@@ -12,7 +13,9 @@ export default async function leaveVoiceChannelHandler(msg: Message, cmdArg: str
 
     if (!queue.deleted) {
         queue.delete();
+        resetActivity(msg.client);
     }
     
+
     (msg.channel as TextChannel).send(lang.EN.VOICE.LEFT);
 }

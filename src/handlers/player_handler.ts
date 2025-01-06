@@ -5,30 +5,21 @@ import { RedisQueryCache } from "@/class/QueryCache";
 import { Redis } from "ioredis";
 import config from "@/config/config";
 import chalk from "chalk";
-import { AppleMusicExtractor, BridgeProvider, BridgeSource, SoundCloudExtractor, SpotifyExtractor, YoutubeExtractor } from "@discord-player/extractor";
+import { DefaultExtractors } from "@discord-player/extractor";
+import resetActivity from "@/utils/reset_activity";
 
 export default async function initPlayer(client: Client): Promise<Player> {
     const redis = await initRedis()
     const player = new Player(client, {
         skipFFmpeg: false,
         queryCache: new RedisQueryCache(redis),
-
-        ytdlOptions: {
-            requestOptions: {
-                headers: {
-                    cookie: config.YOUTUBE_COOKIE,
-                },
-            },
-        },
     });
 
     getPlayerHandlers(player, client)
     player.extractors.register(YoutubeiExtractor, {
         authentication: config.YOUTUBE_COOKIE,
     });
-    player.extractors.register(SpotifyExtractor, {});
-    player.extractors.register(AppleMusicExtractor, {});
-    player.extractors.register(SoundCloudExtractor, {});
+    player.extractors.loadMulti(DefaultExtractors);
     return player;
 }
 
@@ -82,10 +73,7 @@ function getPlayerHandlers(player: Player, client: Client) {
     player.on('error', (error) => {console.error(chalk.red(error))});
 
     player.events.on('playerFinish', (queue, track) => {
-        client.user?.setActivity({
-            name: "Waiting No game no life season 2",
-            type: ActivityType.Custom,
-        });
+        resetActivity(client);
     });
     player.on('error', console.error);
 

@@ -4,7 +4,6 @@ import {
   GuildQueue,
   PlayerNodeInitializerOptions,
   QueryType,
-  QueueRepeatMode,
   SearchResult,
   Track,
   useMainPlayer,
@@ -13,7 +12,7 @@ import {
 import config from "@/config/config";
 import durationFormatter from "@/utils/duration_formatter";
 import checkSameVoiceChannel from "@/utils/check_same_voice_channel";
-
+import getPlayerOptions from "@/utils/get_player_options";
 export default async function playMusicHandler(msg: Message, cmdArg: string) {
   if (!msg.member?.voice.channel) {
     ((msg.channel as TextChannel) as TextChannel).send(lang.EN.VOICE.NOT_CONNECTED);
@@ -43,7 +42,7 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
     return;
   }
 
-  const options = getPlayerOptions(msg);
+  const options = getPlayerOptions(msg) as PlayerNodeInitializerOptions<unknown>;
   let playlist: string = "";
     const { track, searchResult, queue } = await player.play(
       msg.member.voice.channel,
@@ -150,28 +149,6 @@ function getAddedTrackEmbed(
       icon_url: author.avatarURL() as string
     }
   });
-}
-
-function getPlayerOptions<T>(msg: Message): PlayerNodeInitializerOptions<T> {
-  return {
-    nodeOptions: {
-      metadata: {
-        channel: ((msg.channel as TextChannel) as TextChannel) as any,
-        guild: msg.guild
-      } as T,
-      repeatMode: QueueRepeatMode[0] as unknown as QueueRepeatMode,
-      noEmitInsert: true,
-      leaveOnStop: false,
-      leaveOnEmpty: false,
-      leaveOnEnd: false,
-      pauseOnEmpty: false,
-      disableBiquad: true,
-    },
-    requestedBy: msg.author,
-    connectionOptions: {
-      deaf: true
-    },
-  };
 }
 
 function getPlatformIcon(queryType: string): string {

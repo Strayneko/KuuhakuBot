@@ -10,6 +10,7 @@ export default async function queueClearHandler(msg: Message, cmdArg: string) {
     if (!checkSameVoiceChannel(msg, queue)) return;
 
     queue.node.stop();
-    queue.tracks.clear();
+    queue.clear();
+
     (msg.channel as TextChannel).send(lang.EN.QUEUE.EMPTY);
 }
