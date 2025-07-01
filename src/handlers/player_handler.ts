@@ -30,39 +30,39 @@ async function initRedis(): Promise<Redis> {
         host: config.REDIS.HOST,
         password: config.REDIS.PASSWORD,
     });
-  
-  await redis.connect();
-  
-  console.log('Connected to Redis');
 
-  return redis;
+    await redis.connect();
+
+    console.log('Connected to Redis');
+
+    return redis;
 }
 
 function getPlayerHandlers(player: Player, client: Client) {
     player.on('debug', (msg) => console.debug(chalk.blue(msg)));
-    
+
     player.events.on('playerStart', (queue, track) => {
         const embed = new EmbedBuilder({
             color: config.EMBED_COLOR.Primary,
             thumbnail: { url: track.thumbnail },
             fields: [
                 {
-                    name:   "Playing track",
-                    value:  `[${track.title}](${track.url}) - **${track.duration}**`,
+                    name: "Playing track",
+                    value: `[${track.title}](${track.url}) - **${track.duration}**`,
                     inline: true,
                 },
             ],
         });
         client.user?.setActivity({
             name: track.title,
-            type: ActivityType.Playing,
+            type: ActivityType.Listening,
         });
 
         setTimeout(() => {
-            queue.metadata?.channel?.send({embeds: [embed]});
+            queue.metadata?.channel?.send({ embeds: [embed] });
         }, 500)
     });
-    
+
     player.events.on('playerError', (queue, error, track) => {
         console.error(error);
     });
@@ -70,7 +70,7 @@ function getPlayerHandlers(player: Player, client: Client) {
     player.events.on('error', (error) => {
         console.error(error)
     });
-    player.on('error', (error) => {console.error(chalk.red(error))});
+    player.on('error', (error) => { console.error(chalk.red(error)) });
 
     player.events.on('playerFinish', (queue, track) => {
         resetActivity(client);
