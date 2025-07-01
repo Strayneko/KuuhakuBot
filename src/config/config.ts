@@ -5,6 +5,7 @@ dotenv.config({ path: '.env' }).parsed
 const config = {
     BOT_PREFIX: process.env.DISCORD_PREFIX || '',
     DISCORD_TOKEN: process.env.DISCORD_TOKEN || '',
+    BOT_NAME: process.env.BOT_NAME || '',
     BOT_ID: '',
     YOUTUBE_COOKIE: process.env.YOUTUBE_COOKIE || '',
     EMBED_COLOR: {
@@ -24,5 +25,5 @@ const config = {
 export default config
 
 export function setBotId(botId: string) {
-config.BOT_ID = botId;
+    config.BOT_ID = botId;
 }

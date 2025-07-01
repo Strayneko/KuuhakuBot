@@ -1,5 +1,5 @@
 # Use the Node.js 20 base image
-FROM node:20.16.0-bullseye-slim
+FROM node:22.16.0-bookworm-slim
 
 
 # Set the working directory inside the container
@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 # Install dependencies
-RUN yarn
+RUN npm i
 
 # Install ffmpeg and other necessary packages
 # RUN apk update
@@ -17,13 +17,12 @@ RUN yarn
 RUN apt-get update && \
     apt-get install -y ffmpeg
 
-
 # Copy the rest of the application code
 COPY . .
 
 # Build the NestJS application
-RUN yarn build
+RUN npm run build
 
 # Command to run the application
-CMD ["yarn", "prod"]
+CMD ["npm", "run", "prod"]
 

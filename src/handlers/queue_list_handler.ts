@@ -11,7 +11,7 @@ export default async function queueListHandler(msg: Message, cmdArg: string) {
 
   if (page >= totalPages) {
     (msg.channel as TextChannel).send(
-      `:pleading_face: There are only a total of ${totalPages} pages of songs that Shiro can sing.`
+      `:pleading_face: There are only a total of ${totalPages} pages of songs that ${config.BOT_NAME} can sing.`
     );
     return;
   }
