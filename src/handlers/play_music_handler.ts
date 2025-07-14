@@ -13,9 +13,12 @@ import config from "@/config/config";
 import durationFormatter from "@/utils/duration_formatter";
 import checkSameVoiceChannel from "@/utils/check_same_voice_channel";
 import getPlayerOptions from "@/utils/get_player_options";
-export default async function playMusicHandler(msg: Message, cmdArg: string) {
+
+
+export default async function playMusicHandler(msg: Message, cmdArg: string, type: string) {
+  const msgChannel: TextChannel = msg.channel as TextChannel;
   if (!msg.member?.voice.channel) {
-    ((msg.channel as TextChannel) as TextChannel).send(lang.EN.VOICE.NOT_CONNECTED);
+    msgChannel.send(lang.EN.VOICE.NOT_CONNECTED);
     return;
   }
 
@@ -26,29 +29,26 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
   }
 
   if (cmdArg.length === 0) {
-    ((msg.channel as TextChannel) as TextChannel).send(lang.EN.YT_SEARCH.NO_ARGUMENT);
+    msgChannel.send(lang.EN.YT_SEARCH.NO_ARGUMENT);
     return;
-}
-
-  const [searchMsg, results] = await Promise.all([
-    ((msg.channel as TextChannel) as TextChannel).send(lang.EN.YT_SEARCH.SEARCHING), 
-    player.search(cmdArg, {
-      requestedBy: msg.member
-    })
-  ]);
+  }
+  const results = await player.search(cmdArg, {
+    requestedBy: msg.member,
+  });
+  const searchMsg = await msgChannel.send(lang.EN.YT_SEARCH.SEARCHING);
 
   if (results.isEmpty()) {
-   searchMsg.edit(lang.EN.YT_SEARCH.NO_RESULT);
+    searchMsg.edit(lang.EN.YT_SEARCH.NO_RESULT);
     return;
   }
 
   const options = getPlayerOptions(msg) as PlayerNodeInitializerOptions<unknown>;
   let playlist: string = "";
-    const { track, searchResult, queue } = await player.play(
-      msg.member.voice.channel,
-      results,
-      options,
-    );
+  const { track, searchResult, queue } = await player.play(
+    msg.member.voice.channel,
+    results,
+    options,
+  );
 
 
   const embed = getAddedTrackEmbed(track, searchResult, msg.author, queue);
@@ -61,9 +61,8 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
     playlist = searchResult
       .playlist!.tracks.slice(page * 10, page * 10 + 10)
       .map((song, i) => {
-        return `**${i + 1}.** \`[${song.duration}]\` [${song.title}](${
-          song.url
-        })`;
+        return `**${i + 1}.** \`[${song.duration}]\` [${song.title}](${song.url
+          })`;
       })
       .join("\n");
 
@@ -79,12 +78,12 @@ export default async function playMusicHandler(msg: Message, cmdArg: string) {
     );
   }
   searchMsg.delete();
-  ((msg.channel as TextChannel) as TextChannel).send({ embeds });
+  msgChannel.send({ embeds });
 
-  let buffMsg: Message|null = null;
+  let buffMsg: Message | null = null;
 
   if (queue.node.isBuffering()) {
-      buffMsg = await ((msg.channel as TextChannel) as TextChannel).send(lang.EN.QUEUE.BUFFERING);
+    buffMsg = await msgChannel.send(lang.EN.QUEUE.BUFFERING);
   }
 
   if (queue.node.isPlaying() && buffMsg !== null) {
