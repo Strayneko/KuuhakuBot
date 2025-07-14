@@ -5,7 +5,7 @@ import { RedisQueryCache } from "@/class/QueryCache";
 import { Redis } from "ioredis";
 import config from "@/config/config";
 import chalk from "chalk";
-import { DefaultExtractors } from "@discord-player/extractor";
+import { SpotifyExtractor, DefaultExtractors } from "@discord-player/extractor";
 import resetActivity from "@/utils/reset_activity";
 
 export default async function initPlayer(client: Client): Promise<Player> {
@@ -13,13 +13,19 @@ export default async function initPlayer(client: Client): Promise<Player> {
     const player = new Player(client, {
         skipFFmpeg: false,
         queryCache: new RedisQueryCache(redis),
+
     });
 
     getPlayerHandlers(player, client)
     player.extractors.register(YoutubeiExtractor, {
         authentication: config.YOUTUBE_COOKIE,
+        generateWithPoToken: true,
+        streamOptions: {
+            useClient: "WEB_EMBEDDED",
+        },
     });
-    player.extractors.loadMulti(DefaultExtractors);
+    player.extractors.register(SpotifyExtractor, {});
+    player.extractors.loadMulti(DefaultExtractors)
     return player;
 }
 

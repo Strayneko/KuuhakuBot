@@ -12,6 +12,7 @@ import leaveVoiceChannelHandler from "@/handlers/leave_voice_channel_handler";
 import queueShuffleHandler from "@/handlers/queue_shuffle_handler";
 import queueLoopHandler from "@/handlers/queue_loop_handler";
 import queueClearHandler from "@/handlers/queue_clear_handler";
+import spotifyMusicHandler from "@/handlers/music/spotify";
 
 export default function getCommandList(): CommandType[] {
     return [
@@ -19,7 +20,7 @@ export default function getCommandList(): CommandType[] {
             name: 'play',
             shortName: 'p',
             description: 'Play music from youtube or youtube playlist and spotify track or playlist',
-            handler: playMusicHandler,
+            handler: spotifyMusicHandler,
         },
         {
             name: 'queue',
