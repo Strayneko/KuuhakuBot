@@ -16,7 +16,8 @@
     "dotenv": "^16.6.1",
     "ioredis": "^5.6.1",
     "mediaplex": "1.0.0",
-    "module-alias": "^2.2.3"
+    "module-alias": "^2.2.3",
+    "youtubei.js": "^15.0.1"
   },
   "_moduleAliases": {
     "@": "./src"
