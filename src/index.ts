@@ -1,34 +1,13 @@
-import 'module-alias/register';
-import { ActivityType, Client, Events, IntentsBitField } from 'discord.js';
-import config, { setBotId } from '@/config/config';
-import messageHandler from '@/handlers/message_handler';
-import initPlayer from '@/handlers/player_handler';
-
-// create a new Client instance
-const client = new Client({
-    intents: [
-        IntentsBitField.Flags.GuildMembers,
-        IntentsBitField.Flags.GuildMessages,
-        IntentsBitField.Flags.Guilds,
-        IntentsBitField.Flags.MessageContent,
-        IntentsBitField.Flags.GuildVoiceStates,
-    ],
-});
+import { initializeBot } from '@/bot/client';
+import config from '@/config/config';
 
 (async () => {
-    await initPlayer(client);
-
-    // listen for the client to be ready
-    client.once(Events.ClientReady, (c) => {
-        setBotId(c.user.id)
-        console.log(`Bot is now running. Press CTRL-C to exit. Logged in as ${c.user.tag}`);
-        client.user?.setActivity({
-            name: config.DEFAULT_ACTIVITY,
-            type: ActivityType.Custom,
-        });
-    });
-
-    client.on(Events.MessageCreate, messageHandler)
-    // login with the token from .env.local
-    client.login(config.DISCORD_TOKEN);
+    try {
+        const client = await initializeBot();
+        // Login with the token from .env
+        await client.login(config.DISCORD_TOKEN);
+    } catch (error) {
+        console.error('Failed to initialize bot:', error);
+        process.exit(1);
+    }
 })()
