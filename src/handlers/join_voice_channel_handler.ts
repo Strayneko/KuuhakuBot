@@ -1,20 +1,28 @@
+import { Message, TextChannel } from "discord.js";
 import lang from "@/config/lang";
-import getPlayerOptions from "@/utils/get_player_options";
-import { GuildNodeCreateOptions, useMainPlayer } from "discord-player";
-import { Guild, Message } from "discord.js";
-import { TextChannel } from "discord.js";
+import { validateVoiceChannel, createQueueAndConnect } from "@/services/voice_service";
 
-export default async function joinVoiceChannelHandler(msg: Message, cmdArg: string) {
-    if (!msg.member?.voice.channel) {
-        (msg.channel as TextChannel).send(lang.EN.VOICE.NOT_CONNECTED);
+/**
+ * Handler for the join command
+ * Invites the bot to the user's voice channel
+ * @param msg The Discord message object
+ * @param cmdArg Command arguments (not used for join)
+ */
+export default async function joinVoiceChannelHandler(msg: Message, cmdArg: string): Promise<void> {
+    // Validate that user is in a voice channel
+    if (!validateVoiceChannel(msg)) {
         return;
     }
 
-    const options = getPlayerOptions(msg) as unknown as GuildNodeCreateOptions;
-    const player = useMainPlayer();
-    const queue = player.queues.create(msg.guild as Guild, options);
-
-    if (queue.connection) return;
-    queue.connect(msg.member.voice.channel);
-    (msg.channel as TextChannel).send(lang.EN.VOICE.JOINED);
+    try {
+        await createQueueAndConnect(msg);
+        if (msg.channel instanceof TextChannel) {
+            await msg.channel.send(lang.EN.VOICE.JOINED);
+        }
+    } catch (error) {
+        console.error('Error joining voice channel:', error);
+        if (msg.channel instanceof TextChannel) {
+            await msg.channel.send('Failed to join voice channel');
+        }
+    }
 }

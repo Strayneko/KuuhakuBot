@@ -1,18 +1,20 @@
 import config from "@/config/config";
 import getCommandList from "@/utils/get_command_list";
-import { EmbedBuilder, Message } from "discord.js";
-import { TextChannel } from "discord.js";
+import { EmbedBuilder, Message, TextChannel } from "discord.js";
+import { formatCommandList } from "@/services/help_service";
 
-export default function helpHandler(msg: Message, cmdArg: string) {
-    const commandList = getCommandList().map((cmd, i) => {
-        return  `**${i + 1}.** \`${config.BOT_PREFIX}${cmd.name}\` or \`${config.BOT_PREFIX}${
-            cmd.shortName
-          }\` -- ${cmd.description}`;
-    }).join("\n");
-
+/**
+ * Handler for the help command
+ * Displays a list of available commands
+ * @param msg The Discord message object
+ * @param cmdArg Command arguments (not used for help)
+ */
+export default function helpHandler(msg: Message, cmdArg: string): void {
+    const commandList = formatCommandList(getCommandList(), config.BOT_PREFIX);
+    
     const embed = new EmbedBuilder({
         color: config.EMBED_COLOR.Primary,
-        title: 'Avaialle Commands',
+        title: 'Available Commands',
         description: commandList,
     });
 

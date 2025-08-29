@@ -1,21 +1,21 @@
+import { Message, TextChannel } from "discord.js";
 import lang from "@/config/lang";
-import checkSameVoiceChannel from "@/utils/check_same_voice_channel";
-import resetActivity from "@/utils/reset_activity";
-import { useMainPlayer } from "discord-player";
-import { Guild, Message, TextChannel } from "discord.js";
+import { leaveVoiceChannel } from "@/services/voice_service";
 
-export default async function leaveVoiceChannelHandler(msg: Message, cmdArg: string) {
-    const queue = useMainPlayer().queues.get(msg.guild as Guild);
-    if (!queue) return;
-
-    const inSameVoiceChannel = checkSameVoiceChannel(msg, queue);
-    if (!inSameVoiceChannel) return;
-
-    if (!queue.deleted) {
-        queue.delete();
-        resetActivity(msg.client);
+/**
+ * Handler for the leave command
+ * Removes the bot from the voice channel
+ * @param msg The Discord message object
+ * @param cmdArg Command arguments (not used for leave)
+ */
+export default async function leaveVoiceChannelHandler(msg: Message, cmdArg: string): Promise<void> {
+    try {
+        await leaveVoiceChannel(msg);
+        if (msg.channel instanceof TextChannel) {
+            await msg.channel.send(lang.EN.VOICE.LEFT);
+        }
+    } catch (error) {
+        console.error('Error leaving voice channel:', error);
+        // Error message is sent by the service function
     }
-    
-
-    (msg.channel as TextChannel).send(lang.EN.VOICE.LEFT);
 }

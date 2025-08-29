@@ -7,16 +7,23 @@ import config from "@/config/config";
 import chalk from "chalk";
 import { SpotifyExtractor, DefaultExtractors } from "@discord-player/extractor";
 import resetActivity from "@/utils/reset_activity";
+import { setupPlayerEvents } from "@/services/player_service";
 
+/**
+ * Initializes the music player with all required extractors and event handlers
+ * @param client The Discord client instance
+ * @returns The initialized Player instance
+ */
 export default async function initPlayer(client: Client): Promise<Player> {
-    const redis = await initRedis()
+    const redis = await initRedis();
     const player = new Player(client, {
         skipFFmpeg: false,
         queryCache: new RedisQueryCache(redis),
-
     });
 
-    getPlayerHandlers(player, client)
+    setupPlayerEvents(player, client);
+
+    // Register extractors
     player.extractors.register(YoutubeiExtractor, {
         authentication: config.YOUTUBE_COOKIE,
         generateWithPoToken: true,
@@ -24,11 +31,16 @@ export default async function initPlayer(client: Client): Promise<Player> {
             useClient: "WEB_EMBEDDED",
         },
     });
+
     player.extractors.register(SpotifyExtractor, {});
-    player.extractors.loadMulti(DefaultExtractors)
+
     return player;
 }
 
+/**
+ * Initializes the Redis connection for caching
+ * @returns The connected Redis instance
+ */
 async function initRedis(): Promise<Redis> {
     const redis = new Redis({
         lazyConnect: true,
@@ -38,49 +50,6 @@ async function initRedis(): Promise<Redis> {
     });
 
     await redis.connect();
-
     console.log('Connected to Redis');
-
     return redis;
-}
-
-function getPlayerHandlers(player: Player, client: Client) {
-    player.on('debug', (msg) => console.debug(chalk.blue(msg)));
-
-    player.events.on('playerStart', (queue, track) => {
-        const embed = new EmbedBuilder({
-            color: config.EMBED_COLOR.Primary,
-            thumbnail: { url: track.thumbnail },
-            fields: [
-                {
-                    name: "Playing track",
-                    value: `[${track.title}](${track.url}) - **${track.duration}**`,
-                    inline: true,
-                },
-            ],
-        });
-        client.user?.setActivity({
-            name: track.title,
-            type: ActivityType.Listening,
-        });
-
-        setTimeout(() => {
-            queue.metadata?.channel?.send({ embeds: [embed] });
-        }, 500)
-    });
-
-    player.events.on('playerError', (queue, error, track) => {
-        console.error(error);
-    });
-
-    player.events.on('error', (error) => {
-        console.error(error)
-    });
-    player.on('error', (error) => { console.error(chalk.red(error)) });
-
-    player.events.on('playerFinish', (queue, track) => {
-        resetActivity(client);
-    });
-    player.on('error', console.error);
-
 }
