@@ -1,12 +1,40 @@
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
-dotenv.config({ path: '.env' }).parsed
+// Load environment variables
+dotenv.config({ path: '.env' });
 
-const config = {
-    BOT_PREFIX: process.env.DISCORD_PREFIX || '',
+// Define types for config
+interface EmbedColors {
+    Success: number;
+    Error: number;
+    Warning: number;
+    Info: number;
+    Primary: number;
+}
+
+interface RedisConfig {
+    HOST: string | undefined;
+    PORT: number;
+    PASSWORD: string;
+}
+
+interface BotConfig {
+    BOT_PREFIX: string;
+    DISCORD_TOKEN: string;
+    BOT_NAME: string;
+    DEFAULT_ACTIVITY: string;
+    BOT_ID: string;
+    YOUTUBE_COOKIE: string;
+    EMBED_COLOR: EmbedColors;
+    REDIS: RedisConfig;
+}
+
+// Create config object with proper typing
+const config: BotConfig = {
+    BOT_PREFIX: process.env.DISCORD_PREFIX || '!',
     DISCORD_TOKEN: process.env.DISCORD_TOKEN || '',
-    BOT_NAME: process.env.BOT_NAME || '',
-    DEFAULT_ACTIVITY: process.env.DEFAULT_ACTIVITY || '',
+    BOT_NAME: process.env.BOT_NAME || 'KuuhakuBot',
+    DEFAULT_ACTIVITY: process.env.DEFAULT_ACTIVITY || 'Music',
     BOT_ID: '',
     YOUTUBE_COOKIE: process.env.YOUTUBE_COOKIE || '',
     EMBED_COLOR: {
@@ -18,13 +46,17 @@ const config = {
     },
     REDIS: {
         HOST: process.env.REDIS_HOST,
-        PORT: Number(process.env.REDIS_PORT),
+        PORT: Number(process.env.REDIS_PORT) || 6379,
         PASSWORD: process.env.REDIS_PASSWORD || '',
     },
-}
+};
 
-export default config
-
-export function setBotId(botId: string) {
+/**
+ * Sets the bot ID after the client is ready
+ * @param botId The bot's Discord ID
+ */
+export function setBotId(botId: string): void {
     config.BOT_ID = botId;
 }
+
+export default config;
