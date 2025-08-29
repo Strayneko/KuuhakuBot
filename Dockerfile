@@ -1,5 +1,5 @@
 # Use the Node.js 20 base image
-FROM node:22.16.0-bookworm-slim
+FROM oven/bun:latest
 
 
 # Set the working directory inside the container
@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 # Install dependencies
-RUN npm i
+RUN bun install
 
 # Install ffmpeg and other necessary packages
 # RUN apk update
@@ -21,8 +21,8 @@ RUN apt-get update && \
 COPY . .
 
 # Build the NestJS application
-RUN npm run build
+RUN bun run build
 
 # Command to run the application
-CMD ["npm", "run", "prod"]
+CMD ["bun", "run", "./src/index.ts"]
 
